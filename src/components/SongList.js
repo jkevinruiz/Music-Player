@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import {
 	Card,
 	CardActions,
@@ -8,18 +9,11 @@ import {
 	makeStyles,
 	Typography,
 } from '@material-ui/core';
-import { PlayArrow, Save, VerticalAlignTopOutlined } from '@material-ui/icons';
-import React from 'react';
+import { PlayArrow, Save } from '@material-ui/icons';
+import { GET_SONGS } from '../graphql/queries';
 
 function SongList() {
-	let loading = false;
-
-	const song = {
-		title: 'Code',
-		artist: 'Nivek',
-		thumbnail:
-			'https://www.wyzowl.com/wp-content/uploads/2019/09/YouTube-thumbnail-size-guide-best-practices-top-examples.png',
-	};
+	const { loading, error, data } = useQuery(GET_SONGS);
 
 	if (loading) {
 		return (
@@ -36,9 +30,13 @@ function SongList() {
 		);
 	}
 
+	if (error) {
+		return <div>Error fetching songs</div>;
+	}
+
 	return (
 		<div>
-			{Array.from({ length: 10 }, () => song).map((song, i) => (
+			{data.songs.map((song, i) => (
 				<Song key={i} {...song} />
 			))}
 		</div>
