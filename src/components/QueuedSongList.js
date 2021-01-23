@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import {
 	Avatar,
 	IconButton,
@@ -6,15 +7,16 @@ import {
 	useMediaQuery,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
+import { ADD_OR_REMOVE_FROM_QUEUE } from '../graphql/mutations';
 
-const song = {
-	title: 'Code',
-	artist: 'Nivek',
-	thumbnail:
-		'https://www.wyzowl.com/wp-content/uploads/2019/09/YouTube-thumbnail-size-guide-best-practices-top-examples.png',
-};
+// const song = {
+// 	title: 'Code',
+// 	artist: 'Nivek',
+// 	thumbnail:
+// 		'https://www.wyzowl.com/wp-content/uploads/2019/09/YouTube-thumbnail-size-guide-best-practices-top-examples.png',
+// };
 
-function QueuedSongList() {
+function QueuedSongList({ queue }) {
 	const greaterThanMd = useMediaQuery((theme) => theme.breakpoints.up('md'));
 	return greaterThanMd ? (
 		<div
@@ -23,9 +25,9 @@ function QueuedSongList() {
 			}}
 		>
 			<Typography color='textSecondary' variant='button'>
-				QUEUE (5)
+				QUEUE ({queue.length})
 			</Typography>
-			{Array.from({ length: 5 }, () => song).map((song, i) => (
+			{queue.map((song, i) => (
 				<QueuedSong key={i} {...song} />
 			))}
 		</div>
@@ -55,8 +57,21 @@ const useStyles = makeStyles({
 	},
 });
 
-function QueuedSong({ title, artist, thumbnail }) {
+function QueuedSong(song) {
+	const { title, artist, thumbnail } = song;
+	const [addOrRemoveFromQueue] = useMutation(ADD_OR_REMOVE_FROM_QUEUE, {
+		onCompleted: (data) => {
+			localStorage.setItem('queue', JSON.stringify(data.addOrRemoveFromQueue));
+		},
+	});
+
 	const classes = useStyles();
+
+	function handleAddOrRemoveFromQueue() {
+		addOrRemoveFromQueue({
+			variables: { input: { ...song, __typename: 'Song' } },
+		});
+	}
 
 	return (
 		<div className={classes.container}>
@@ -73,7 +88,7 @@ function QueuedSong({ title, artist, thumbnail }) {
 					{artist}
 				</Typography>
 			</div>
-			<IconButton>
+			<IconButton onClick={handleAddOrRemoveFromQueue}>
 				<Delete color='error' />
 			</IconButton>
 		</div>
