@@ -7,7 +7,14 @@ import {
 	Slider,
 	Typography,
 } from '@material-ui/core';
-import { PlayArrow, SkipNext, SkipPreviousSharp } from '@material-ui/icons';
+import {
+	Pause,
+	PlayArrow,
+	SkipNext,
+	SkipPreviousSharp,
+} from '@material-ui/icons';
+import { useContext } from 'react';
+import { SongContext } from '../App';
 import QueuedSongList from './QueuedSongList';
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +46,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SongPlayer() {
+	const { state, dispatch } = useContext(SongContext);
+
 	const classes = useStyles();
+
+	function handleTogglePlay() {
+		dispatch(
+			state.isPlaying
+				? {
+						type: 'PAUSE_SONG',
+				  }
+				: {
+						type: 'PLAY_SONG',
+				  }
+		);
+	}
+
+	const {
+		song: { title, artist, thumbnail, duration },
+		isPlaying,
+	} = state;
 
 	return (
 		<>
@@ -47,18 +73,22 @@ function SongPlayer() {
 				<div className={classes.details}>
 					<CardContent className={classes.content}>
 						<Typography varian='h5' component='h3'>
-							Title
+							{title}
 						</Typography>
 						<Typography varian='subtitle1' component='p' color='textSecondary'>
-							Arist
+							{artist}
 						</Typography>
 					</CardContent>
 					<div className={classes.controls}>
 						<IconButton>
 							<SkipPreviousSharp />
 						</IconButton>
-						<IconButton>
-							<PlayArrow className={classes.playIcon} />
+						<IconButton onClick={handleTogglePlay}>
+							{isPlaying ? (
+								<Pause className={classes.playIcon} />
+							) : (
+								<PlayArrow className={classes.playIcon} />
+							)}
 						</IconButton>
 						<IconButton>
 							<SkipNext />
@@ -69,10 +99,7 @@ function SongPlayer() {
 					</div>
 					<Slider type='range' min={0} max={1} step={0.01} />
 				</div>
-				<CardMedia
-					className={classes.thumbnail}
-					image='https://www.wyzowl.com/wp-content/uploads/2019/09/YouTube-thumbnail-size-guide-best-practices-top-examples.png'
-				/>
+				<CardMedia className={classes.thumbnail} image={thumbnail} />
 			</Card>
 			<QueuedSongList />
 		</>

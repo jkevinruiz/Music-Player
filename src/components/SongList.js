@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
 	Card,
 	CardActions,
@@ -9,11 +8,14 @@ import {
 	makeStyles,
 	Typography,
 } from '@material-ui/core';
-import { PlayArrow, Save } from '@material-ui/icons';
-import { GET_SONGS } from '../graphql/queries';
+import { Pause, PlayArrow, Save } from '@material-ui/icons';
+import { useSubscription } from '@apollo/client';
+import { GET_SONGS } from '../graphql/subscriptions';
+import { SongContext } from '../App';
+import { useContext, useEffect, useState } from 'react';
 
 function SongList() {
-	const { loading, error, data } = useQuery(GET_SONGS);
+	const { loading, error, data } = useSubscription(GET_SONGS);
 
 	if (loading) {
 		return (
@@ -63,8 +65,36 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Song({ title, artist, thumbnail }) {
+function Song(song) {
+	const { title, artist, thumbnail, id } = song;
 	const classes = useStyles();
+
+	const [currentSongPlaying, setCurrentSongPlaying] = useState(false);
+	const { state, dispatch } = useContext(SongContext);
+
+	console.log(state);
+
+	useEffect(() => {
+		const isSongPlaying = state.isPlaying && id === state.song.id;
+		setCurrentSongPlaying(isSongPlaying);
+	}, [id, state.song.id, state.isPlaying]);
+
+	function handleTogglePlay() {
+		dispatch({
+			type: 'SET_SONG',
+			payload: { song },
+		});
+
+		dispatch(
+			state.isPlaying
+				? {
+						type: 'PAUSE_SONG',
+				  }
+				: {
+						type: 'PLAY_SONG',
+				  }
+		);
+	}
 
 	return (
 		<Card className={classes.container}>
@@ -80,8 +110,12 @@ function Song({ title, artist, thumbnail }) {
 						</Typography>
 					</CardContent>
 					<CardActions>
-						<IconButton size='small' color='primary'>
-							<PlayArrow />
+						<IconButton size='small' color='primary' onClick={handleTogglePlay}>
+							{currentSongPlaying ? (
+								<Pause className={classes.playIcon} />
+							) : (
+								<PlayArrow className={classes.playIcon} />
+							)}
 						</IconButton>
 						<IconButton size='small' color='secondary'>
 							<Save />

@@ -13,6 +13,8 @@ import { Link, AddBoxOutlined } from '@material-ui/icons';
 import ReactPlayer from 'react-player/lazy';
 import YoutubePlayer from 'react-player/lib/players/YouTube';
 import SoundCloundPlayer from 'react-player/lib/players/SoundCloud';
+import { useMutation } from '@apollo/client';
+import { ADD_SONG } from '../graphql/mutations';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -33,17 +35,21 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const DEFAULT_SONG = {
+	duration: 0,
+	title: '',
+	artist: '',
+	thumbnail: '',
+	url: '',
+};
+
 function AddSong() {
 	const classes = useStyles();
-	const [url, setUrl] = useState();
+	const [url, setUrl] = useState('');
 	const [playable, setPlayable] = useState(false);
-	const [song, setSong] = useState({
-		duration: 0,
-		title: '',
-		artist: '',
-		thumbnail: '',
-	});
+	const [song, setSong] = useState(DEFAULT_SONG);
 	const [dialog, setDialog] = useState(false);
+	const [addSong, { error }] = useMutation(ADD_SONG);
 
 	useEffect(() => {
 		const isPlayable =
@@ -55,11 +61,31 @@ function AddSong() {
 		setDialog(false);
 	}
 
-	function handleEditSongData(event) {
-		const name = event.target.name;
+	async function handleAddSong() {
+		try {
+			const { url, thumbnail, duration, title, artist } = song;
+			await addSong({
+				variables: {
+					url: url.length > 0 ? url : null,
+					thumbnail: thumbnail.length > 0 ? thumbnail : null,
+					duration: duration > 0 ? duration : null,
+					title: title.length > 0 ? title : null,
+					artist: artist.length > 0 ? artist : null,
+				},
+			});
+			handleCloseDialog();
+			setSong(DEFAULT_SONG);
+			setUrl('');
+		} catch (error) {
+			console.dir('Error adding song', error);
+		}
+	}
+
+	function handleChangeSongData(event) {
+		const { name, value } = event.target;
 		setSong({
 			...song,
-			[name]: event.target.value,
+			[name]: value,
 		});
 	}
 
@@ -105,6 +131,10 @@ function AddSong() {
 		});
 	}
 
+	function handleError(field) {
+		return error?.graphQLErrors[0]?.extensions?.path.includes(field);
+	}
+
 	const { thumbnail, title, artist } = song;
 
 	return (
@@ -127,7 +157,9 @@ function AddSong() {
 						label='Title'
 						fullWidth
 						value={title}
-						onChange={handleEditSongData}
+						onChange={handleChangeSongData}
+						error={handleError('title')}
+						helperText={handleError('title') && 'Fill out field'}
 					/>
 					<TextField
 						margin='dense'
@@ -135,7 +167,9 @@ function AddSong() {
 						label='Artist'
 						fullWidth
 						value={artist}
-						onChange={handleEditSongData}
+						onChange={handleChangeSongData}
+						error={handleError('artist')}
+						helperText={handleError('artist') && 'Fill out field'}
 					/>
 					<TextField
 						margin='dense'
@@ -143,14 +177,16 @@ function AddSong() {
 						label='Thumbnail'
 						fullWidth
 						value={thumbnail}
-						onChange={handleEditSongData}
+						onChange={handleChangeSongData}
+						error={handleError('thumbnail')}
+						helperText={handleError('thumbnail') && 'Fill out field'}
 					/>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleCloseDialog} color='secondary'>
 						Cancel
 					</Button>
-					<Button variant='outlined' color='primary'>
+					<Button variant='outlined' color='primary' onClick={handleAddSong}>
 						Add Song
 					</Button>
 				</DialogActions>
