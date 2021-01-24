@@ -2,6 +2,8 @@
 
 Music sharing application built with ReactJS, Apollo Client (GraphQL), and Hasura for the backend.
 
+![](https://github.com/jkevinruiz/music-player/blob/main/assets/music-player.png)
+
 ## Clone Project
 
 1. `git clone https://github.com/jkevinruiz/music-player.git`
@@ -13,19 +15,19 @@ Music sharing application built with ReactJS, Apollo Client (GraphQL), and Hasur
 2. Create an account if you don't already have one
 3. Project setup
 
-![](https://github.com/jkevinruiz/music-player/blob/main/howto/1-project-setup.png)
+![](https://github.com/jkevinruiz/music-player/blob/main/assets/1-project-setup.png)
 
 4. Database setup with heroku
 
-![](https://github.com/jkevinruiz/music-player/blob/main/howto/2-database-setup.png)
+![](https://github.com/jkevinruiz/music-player/blob/main/assets/2-database-setup.png)
 
 5. Launch Hasura Console. Take note of the GraphQL endpoint
 
-![](https://github.com/jkevinruiz/music-player/blob/main/howto/3-hasura-console.png)
+![](https://github.com/jkevinruiz/music-player/blob/main/assets/3-hasura-console.png)
 
 6. Go to `Data` tab and add a new `table`
 
-![](https://github.com/jkevinruiz/music-player/blob/main/howto/4-add-new-table.png)
+![](https://github.com/jkevinruiz/music-player/blob/main/assets/4-add-new-table.png)
 
 7. Backend is all set
 
