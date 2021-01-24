@@ -21,6 +21,14 @@ function songReducer(state, action) {
 			};
 		}
 
+		case 'SET_SONG_AND_PLAY': {
+			return {
+				...state,
+				song: action.payload.song,
+				isPlaying: true,
+			};
+		}
+
 		default:
 			return state;
 	}
