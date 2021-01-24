@@ -2,6 +2,11 @@
 
 Music sharing application built with ReactJS, Apollo Client (GraphQL), and Hasura for the backend.
 
+## Clone Project
+
+1. `git clone https://github.com/jkevinruiz/music-player.git`
+2. run `npm install` or `yarn`
+
 ## Create `Hasura.io` Free Tier Project
 
 1. Go to `hasura.io` and click `use hasura cloud for free`
@@ -34,8 +39,9 @@ Note: Remove `https:` we handle the in `client.js`
 
 ## All set you can start using the web app
 
-1. Copy and Paste a `Youtube/SoundClound` url and add a song
-2. Start listening
+1. Start project by running `yarn start` or `npm start`
+2. Copy and Paste a `Youtube/SoundClound` url and add a song
+3. Start listening
 
 ## Sample URL
 
