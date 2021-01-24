@@ -41,7 +41,7 @@ function App() {
 			<Hidden only='xs'>
 				<Header />
 			</Hidden>
-			<Grid container={true} spacing={3}>
+			<Grid container={true}>
 				<Grid
 					item
 					xs={12}
@@ -60,13 +60,14 @@ function App() {
 					style={
 						greaterThanMd
 							? {
-									position: 'fixed',
+									// position: 'static',
 									width: '100%',
 									right: 0,
-									top: 70,
+									// top: 70,
+									marginTop: '70px',
 							  }
 							: {
-									position: 'fixed',
+									position: 'sticky',
 									width: '100%',
 									left: 0,
 									bottom: 0,

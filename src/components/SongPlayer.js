@@ -137,7 +137,11 @@ function SongPlayer() {
 
 	return (
 		<>
-			<Card className={classes.container} variant='outlined'>
+			<Card
+				className={classes.container}
+				variant='outlined'
+				style={{ margin: '15px' }}
+			>
 				<div className={classes.details}>
 					<CardContent className={classes.content}>
 						<Typography varian='h5' component='h3'>
