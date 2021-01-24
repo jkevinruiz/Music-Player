@@ -11,11 +11,11 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { GET_QUEUED_SONGS } from './queries';
 
 const httpLink = new HttpLink({
-	uri: `https://music-share.hasura.app/v1/graphql`,
+	uri: `https:${process.env.REACT_APP_HASURA_URI}`,
 });
 
 const wsLink = new WebSocketLink({
-	uri: `ws://music-share.hasura.app/v1/graphql`,
+	uri: `ws:${process.env.REACT_APP_HASURA_URI}`,
 	options: {
 		reconnect: true,
 	},
