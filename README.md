@@ -37,7 +37,7 @@ Music sharing application built with ReactJS, Apollo Client (GraphQL), and Hasur
 2. See env.example for how to set it up
 3. Change the example URI to the `GraphQL endpoint` we got from Hasura Console
 
-Note: Remove `https:` we handle the in `client.js`
+Note: Remove `https:` we handle that in `client.js`
 
 ## All set you can start using the web app
 
