@@ -65,13 +65,13 @@ function SongPlayer() {
 
 	useEffect(() => {
 		const nextSong = data.queue[positionInQueue + 1];
-		if (played === 1 && nextSong) {
+		if (played >= 0.99 && nextSong) {
 			setPlayed(0);
 			dispatch({
 				type: 'SET_SONG',
 				payload: { song: nextSong },
 			});
-		} else if (played === 1 && !nextSong) {
+		} else if (played >= 0.99 && !nextSong) {
 			dispatch({
 				type: 'PAUSE_SONG',
 			});
